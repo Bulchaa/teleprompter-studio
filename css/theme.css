@@ -1,0 +1,151 @@
+/* Teleprompter Studio — shared design tokens & base styles */
+:root{
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --topbar-h: 68px;
+  --radius-xs: 8px;
+  --radius-sm: 11px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+html[data-theme="light"], :root{
+  color-scheme: light;
+  --bg: #f3f0e9;
+  --bg-2: #ebe6db;
+  --surface: #fffdf9;
+  --surface-2: #f5f1e8;
+  --surface-3: #eae3d7;
+  --surface-glass: rgba(255,253,249,.78);
+  --border: rgba(42,35,28,.10);
+  --border-strong: rgba(42,35,28,.18);
+  --text: #211b15;
+  --text-2: #574e43;
+  --muted: #8b8175;
+  --accent: #c2760a;
+  --accent-2: #e8a22f;
+  --accent-contrast: #241a09;
+  --accent-soft: rgba(194,118,10,.12);
+  --ring: rgba(194,118,10,.35);
+  --danger: #c0392b;
+  --shadow-card: 0 28px 70px -38px rgba(42,35,28,.40), 0 2px 8px rgba(42,35,28,.04);
+  --shadow-pop: 0 24px 60px -20px rgba(42,35,28,.30), 0 2px 10px rgba(42,35,28,.08);
+  --glow-a: rgba(232,162,47,.20);
+  --glow-b: rgba(96,165,180,.10);
+  --grid-dot: rgba(33,27,21,.08);
+}
+
+html[data-theme="dark"]{
+  color-scheme: dark;
+  --bg: #0d0c0a;
+  --bg-2: #14110e;
+  --surface: #181512;
+  --surface-2: #211d19;
+  --surface-3: #2b2520;
+  --surface-glass: rgba(24,21,18,.78);
+  --border: rgba(255,246,232,.09);
+  --border-strong: rgba(255,246,232,.16);
+  --text: #f7f2e8;
+  --text-2: #c9c1b3;
+  --muted: #93897b;
+  --accent: #f5b53f;
+  --accent-2: #ffd479;
+  --accent-contrast: #1c1408;
+  --accent-soft: rgba(245,181,63,.13);
+  --ring: rgba(245,181,63,.40);
+  --danger: #f87171;
+  --shadow-card: 0 34px 90px -40px rgba(0,0,0,.9), 0 2px 10px rgba(0,0,0,.35);
+  --shadow-pop: 0 28px 70px -22px rgba(0,0,0,.85), 0 2px 10px rgba(0,0,0,.4);
+  --glow-a: rgba(245,181,63,.10);
+  --glow-b: rgba(56,189,248,.05);
+  --grid-dot: rgba(255,246,232,.055);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  min-height:100%;
+  font-family:var(--font-sans);
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit}
+img,svg,video{display:block;max-width:100%}
+ul,ol{list-style:none;margin:0;padding:0}
+p,h1,h2,h3,h4{margin:0}
+.hidden{display:none!important}
+::selection{background:var(--accent-soft);color:var(--text)}
+:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+button:focus:not(:focus-visible),input:focus:not(:focus-visible),textarea:focus:not(:focus-visible),select:focus:not(:focus-visible){outline:none}
+
+.icon{
+  width:18px;height:18px;flex:none;
+  fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.icon-sm{width:15px;height:15px}
+
+*{scrollbar-width:thin;scrollbar-color:var(--surface-3) transparent}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:99px;border:3px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:var(--muted);border:3px solid transparent;background-clip:padding-box}
+
+kbd{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:20px;padding:0 5px;
+  border:1px solid var(--border-strong);border-bottom-width:2px;
+  border-radius:5px;background:var(--surface-2);
+  font-family:inherit;font-size:.62rem;font-weight:600;color:var(--muted);
+}
+
+/* Day / night toggle */
+.theme-toggle{
+  position:relative;display:inline-grid;place-items:center;
+  width:40px;height:40px;flex:none;border-radius:50%;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--text-2);
+  transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),transform .2s var(--ease);
+}
+.theme-toggle:hover{color:var(--accent);border-color:var(--border-strong);transform:translateY(-1px)}
+.theme-toggle:active{transform:translateY(0) scale(.96)}
+.theme-toggle .icon{
+  position:absolute;width:18px;height:18px;
+  transition:opacity .25s var(--ease),transform .35s var(--ease);
+}
+.theme-toggle .icon-sun{opacity:0;transform:rotate(-50deg) scale(.55)}
+.theme-toggle .icon-moon{opacity:1;transform:rotate(0) scale(1)}
+html[data-theme="dark"] .theme-toggle .icon-sun{opacity:1;transform:rotate(0) scale(1)}
+html[data-theme="dark"] .theme-toggle .icon-moon{opacity:0;transform:rotate(50deg) scale(.55)}
+
+/* Tiny status pulse used in the app and remote */
+.live-dot{
+  width:8px;height:8px;flex:none;border-radius:50%;
+  background:var(--muted);transition:background .2s;
+}
+.live-dot.is-live{
+  background:var(--accent);
+  box-shadow:0 0 0 0 var(--ring);
+  animation:pulse-dot 2s infinite;
+}
+@keyframes pulse-dot{
+  0%{box-shadow:0 0 0 0 var(--ring)}
+  60%{box-shadow:0 0 0 7px transparent}
+  100%{box-shadow:0 0 0 0 transparent}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+  }
+}

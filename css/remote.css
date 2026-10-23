@@ -1,0 +1,92 @@
+/* Teleprompter Studio — phone remote */
+.remote-page{
+  min-height:100vh;min-height:100dvh;
+  overflow-x:hidden;
+  background:
+    radial-gradient(700px 420px at 50% -12%, var(--glow-a), transparent 65%),
+    linear-gradient(180deg,var(--bg),var(--bg-2));
+}
+.remote-shell{
+  width:min(100%,540px);margin:0 auto;
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;gap:18px;
+  padding:max(18px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom));
+}
+.remote-header{display:flex;align-items:center;gap:11px}
+.remote-brand{display:flex;align-items:center;gap:11px;min-width:0}
+.remote-mark{
+  display:grid;place-items:center;width:42px;height:42px;flex:none;
+  border-radius:13px;color:var(--accent-contrast);
+  background:linear-gradient(135deg,var(--accent-2),var(--accent));
+  box-shadow:0 10px 24px -12px var(--accent);
+}
+.remote-mark .icon{width:21px;height:21px}
+.remote-brand-text{min-width:0}
+.remote-title{font-size:.98rem;font-weight:700;letter-spacing:-.025em;line-height:1.2}
+.remote-title span{color:var(--accent)}
+.remote-sub{font-size:.68rem;color:var(--muted);margin-top:2px}
+.remote-header .theme-toggle{margin-left:auto}
+
+.remote-panel{
+  flex:1;display:flex;flex-direction:column;gap:16px;
+  padding:18px;border:1px solid var(--border);border-radius:24px;
+  background:var(--surface);box-shadow:var(--shadow-card);
+}
+.remote-status-row{display:flex;align-items:flex-start;gap:12px}
+.remote-status{display:flex;align-items:flex-start;gap:10px;flex:1;min-width:0}
+.remote-status .live-dot{margin-top:5px}
+.remote-status-text{font-size:.9rem;font-weight:600;color:var(--text);line-height:1.35}
+.remote-status-sub{margin-top:2px;font-size:.68rem;color:var(--muted)}
+.remote-badge{
+  padding:4px 8px;border-radius:999px;border:1px solid var(--border);
+  background:var(--surface-2);font-size:.58rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;
+}
+.remote-badge.is-live{color:var(--accent);border-color:var(--accent-soft);background:var(--accent-soft)}
+
+.remote-progress-row{display:flex;align-items:center;gap:10px}
+.remote-track{flex:1;height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden;border:1px solid var(--border)}
+.remote-track span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .2s linear}
+#remotePct{min-width:38px;text-align:right;font-size:.72rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.remote-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.remote-btn{
+  display:flex;align-items:center;gap:10px;
+  min-height:68px;padding:12px 14px;text-align:left;
+  border:1px solid var(--border);border-radius:16px;
+  background:var(--surface-2);color:var(--text-2);
+  font-size:.82rem;font-weight:600;line-height:1.25;
+  transition:background .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease),transform .16s var(--ease),box-shadow .16s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.remote-btn:hover{background:var(--surface-3);border-color:var(--border-strong);color:var(--text)}
+.remote-btn:active,.remote-btn.is-pressed{transform:scale(.975);background:var(--surface-3)}
+.remote-btn .remote-btn-icon{
+  display:grid;place-items:center;width:34px;height:34px;flex:none;
+  border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--accent);
+}
+.remote-btn .remote-btn-icon .icon{width:17px;height:17px}
+.remote-btn-wide{grid-column:1/-1;min-height:76px;justify-content:center;font-size:.95rem;font-weight:700}
+.remote-btn-primary{
+  border-color:transparent;color:var(--accent-contrast);
+  background:linear-gradient(135deg,var(--accent-2),var(--accent));
+  box-shadow:0 16px 34px -18px var(--accent);
+}
+.remote-btn-primary:hover{color:var(--accent-contrast);filter:brightness(1.04);background:linear-gradient(135deg,var(--accent-2),var(--accent))}
+.remote-btn-primary .remote-btn-icon{background:rgba(28,20,8,.12);border-color:transparent;color:var(--accent-contrast)}
+.remote-btn-primary .remote-btn-icon .icon{fill:currentColor;stroke:none}
+.remote-btn-primary .remote-btn-icon .icon[data-stroke]{fill:none;stroke:currentColor}
+
+.remote-hint{
+  text-align:center;font-size:.7rem;line-height:1.6;color:var(--muted);
+  padding:0 10px;
+}
+.remote-hint kbd{vertical-align:middle}
+
+@media (max-width:380px){
+  .remote-shell{padding-left:12px;padding-right:12px;gap:14px}
+  .remote-panel{padding:14px;border-radius:20px;gap:13px}
+  .remote-btn{min-height:62px;padding:10px 11px;font-size:.78rem;gap:8px}
+  .remote-btn .remote-btn-icon{width:30px;height:30px}
+  .remote-btn-wide{min-height:68px;font-size:.9rem}
+}
