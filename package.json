@@ -10,10 +10,10 @@
   "bugs": {
     "url": "https://github.com/bulchaa/teleprompter-studio/issues"
   },
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node scripts/relay-server.js",
-    "dev": "npx serve .",
+    "start": "node server.js",
+    "dev": "node server.js",
     "test": "echo \"No tests yet\" && exit 0"
   },
   "keywords": [
@@ -33,6 +33,7 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
+    "express": "^4.18.2",
     "ws": "^8.22.0"
   }
 }

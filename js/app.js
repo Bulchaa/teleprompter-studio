@@ -218,6 +218,9 @@ $('exportSel').addEventListener('change',async e=>{
 
 /* ---------- reader UI ---------- */
 const readerEl=$('reader'),extras=$('readerExtras'),settingsBtn=$('rSettingsBtn'),appShell=document.querySelector('.app');
+const remoteUrlBox=$('remoteUrlBox');
+const remoteUrlInput=$('remoteUrlInput');
+const remoteUrlCopy=$('remoteUrlCopy');
 
 function syncOutputs(){
   $('rSpeedVal').textContent=$('rSpeed').value;
@@ -341,6 +344,23 @@ addEventListener('resize',()=>{
 });
 
 /* ---------- independent advanced modules ---------- */
+function updateRemoteUrl(){
+  const m=active['webremote'];
+  if(m&&m.sessionId){
+    remoteUrlInput.value=`${location.origin}/remote.html?session=${encodeURIComponent(m.sessionId)}`;
+    remoteUrlBox.classList.remove('hidden');
+  }else{
+    remoteUrlBox.classList.add('hidden');
+  }
+}
+
+remoteUrlCopy.addEventListener('click',()=>{
+  remoteUrlInput.select();
+  document.execCommand('copy');
+  remoteUrlCopy.textContent='Copied!';
+  setTimeout(()=>{remoteUrlCopy.textContent='Copy';},1200);
+});
+
 async function toggleMod(name,on){
   if(on&&!active[name]){
     const m=(await MODS[name]()).default;
@@ -354,6 +374,7 @@ async function toggleMod(name,on){
     delete active[name];
   }
   db.saveSetting('modules',Object.keys(active)).catch(()=>{});
+  updateRemoteUrl();
 }
 document.querySelectorAll('[data-mod]').forEach(c=>c.addEventListener('change',()=>toggleMod(c.dataset.mod,c.checked)));
 

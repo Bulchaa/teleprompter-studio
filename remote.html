@@ -21,22 +21,35 @@
       </div>
       <div class="remote-brand-text">
         <h1 class="remote-title">Teleprompter <span>Remote</span></h1>
-        <p class="remote-sub">Control your reading from any tab</p>
+        <p class="remote-sub">Control your reading from any device</p>
       </div>
     </div>
-    <button id="remoteTheme" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
-      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4"/></svg>
-      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+    <button id="remoteTheme" class="theme-toggle" type="button" aria-label="Switch theme">
+      <svg class="icon icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4"/></svg>
+      <svg class="icon icon-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
     </button>
   </header>
 
   <section class="remote-panel" aria-label="Remote controls">
+    <!-- Session selector -->
+    <div class="remote-session">
+      <label for="remoteSessionInput">Session ID</label>
+      <div class="session-input-wrap">
+        <input id="remoteSessionInput" type="text" placeholder="Enter session ID…" autocomplete="off">
+        <button id="remoteJoinBtn" type="button">Join</button>
+      </div>
+      <div id="remoteSessionDisplay" class="remote-session-display hidden">
+        <span id="remoteSessionId"></span>
+        <button id="remoteCopySession" type="button">Copy</button>
+      </div>
+    </div>
+
     <div class="remote-status-row">
       <div class="remote-status">
         <span id="statusDot" class="live-dot"></span>
         <div>
-          <div id="st" class="remote-status-text" aria-live="polite">Waiting for reader…</div>
-          <div class="remote-status-sub">Same browser · same device</div>
+          <div id="st" class="remote-status-text">Waiting for reader…</div>
+          <div class="remote-status-sub">Enter a Session ID above</div>
         </div>
       </div>
       <span id="remoteBadge" class="remote-badge">Ready</span>
@@ -50,83 +63,173 @@
     <div id="btns" class="remote-grid"></div>
   </section>
 
-  <p class="remote-hint">Open Teleprompter Studio, enable <strong>Remote control</strong> in the sidebar, then start reading. Keep both tabs open.</p>
+  <p class="remote-hint">Ask the reader operator for the Session ID shown in Teleprompter Studio, then enter it here.</p>
 </main>
 
 <script>
-const $=id=>document.getElementById(id);
-const root=document.documentElement;
-const meta=document.querySelector('meta[name="theme-color"]');
-function setTheme(theme,persist){
-  theme=theme==='dark'?'dark':'light';
-  root.dataset.theme=theme;
-  if(persist){try{localStorage.setItem('tp-theme',theme)}catch(e){}}
-  meta.setAttribute('content',theme==='dark'?'#0d0c0a':'#f3f0e9');
-  const next=theme==='dark'?'light':'dark';
-  $('remoteTheme').setAttribute('aria-label','Switch to '+next+' mode');
-  $('remoteTheme').title='Switch to '+next+' mode';
-  $('remoteTheme').setAttribute('aria-pressed',String(theme==='dark'));
-}
-setTheme(root.dataset.theme||'light',false);
-$('remoteTheme').onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark',true);
+const $ = id => document.getElementById(id);
+const root = document.documentElement;
+const meta = document.querySelector('meta[name="theme-color"]');
 
-const ICONS={
-  play:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>',
-  pause:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg>',
-  restart:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v5h5"/><path d="M4.6 10a8 8 0 1 1-.4 5"/></svg>',
-  back:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6 4 11l5 5"/><path d="M4 11h9a6 6 0 0 1 0 12h-1"/></svg>',
-  fwd:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6 5 5-5 5"/><path d="M20 11h-9a6 6 0 0 0 0 12h1"/></svg>',
-  slower:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>',
-  faster:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 14 5-5 5 5"/></svg>',
-  smaller:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7v10M9 12H3M14 12h7M17.5 8.5v7"/></svg>',
-  bigger:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7v10M9 12H3M14 12h7M17.5 8.5v7M21 12h-7"/></svg>',
-  mirror:'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M9 6 4 9v6l5 3zM15 6l5 3v6l-5 3z"/></svg>'
+function setTheme(theme, persist) {
+  theme = theme === 'dark' ? 'dark' : 'light';
+  root.dataset.theme = theme;
+  if (persist) { try { localStorage.setItem('tp-theme', theme); } catch (e) {} }
+  meta.setAttribute('content', theme === 'dark' ? '#0d0c0a' : '#f3f0e9');
+  const next = theme === 'dark' ? 'light' : 'dark';
+  $('remoteTheme').setAttribute('aria-label', 'Switch to ' + next + ' mode');
+  $('remoteTheme').title = 'Switch to ' + next + ' mode';
+  $('remoteTheme').setAttribute('aria-pressed', String(theme === 'dark'));
+}
+setTheme(root.dataset.theme || 'light', false);
+$('remoteTheme').onclick = () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true);
+
+const ICONS = {
+  play: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>',
+  pause: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg>',
+  restart: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v5h5"/><path d="M4.6 10a8 8 0 1 1-.4 5"/></svg>',
+  back: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6 4 11l5 5"/><path d="M4 11h9a6 6 0 0 1 0 12h-1"/></svg>',
+  fwd: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6 5 5-5 5"/><path d="M20 11h-9a6 6 0 0 0 0 12h1"/></svg>',
+  slower: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>',
+  faster: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 14 5-5 5 5"/></svg>',
+  smaller: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7v10M9 12H3M14 12h7M17.5 8.5v7"/></svg>',
+  bigger: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7v10M9 12H3M14 12h7M17.5 8.5v7M21 12h-7"/></svg>',
+  mirror: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M9 6 4 9v6l5 3zM15 6l5 3v6l-5 3z"/></svg>'
 };
-const COMMANDS=[
-  ['toggle','Play / Pause','play',true],
-  ['restart','Restart','restart'],
-  ['back','Back 10s','back'],
-  ['fwd','Forward 10s','fwd'],
-  ['slower','Slower','slower'],
-  ['faster','Faster','faster'],
-  ['smaller','Text −','smaller'],
-  ['bigger','Text +','bigger'],
-  ['mirror','Mirror','mirror']
+
+const COMMANDS = [
+  ['toggle', 'Play / Pause', 'play', true],
+  ['restart', 'Restart', 'restart'],
+  ['back', 'Back 10s', 'back'],
+  ['fwd', 'Forward 10s', 'fwd'],
+  ['slower', 'Slower', 'slower'],
+  ['faster', 'Faster', 'faster'],
+  ['smaller', 'Text −', 'smaller'],
+  ['bigger', 'Text +', 'bigger'],
+  ['mirror', 'Mirror', 'mirror']
 ];
-const ch=new BroadcastChannel('tp-remote');
-let playBtn;
-COMMANDS.forEach(([cmd,label,icon,wide])=>{
-  const b=document.createElement('button');
-  b.type='button';
-  b.className='remote-btn'+(wide?' remote-btn-wide remote-btn-primary':'');
-  b.innerHTML=`<span class="remote-btn-icon">${ICONS[icon]}</span><span class="remote-btn-label">${label}</span>`;
-  b.onclick=()=>{
-    ch.postMessage({cmd});
-    b.classList.add('is-pressed');
-    setTimeout(()=>b.classList.remove('is-pressed'),170);
+
+const urlParams = new URLSearchParams(window.location.search);
+const initialSession = urlParams.get('session');
+
+const sessionInput = $('remoteSessionInput');
+const joinBtn = $('remoteJoinBtn');
+const sessionDisplay = $('remoteSessionDisplay');
+const sessionIdSpan = $('remoteSessionId');
+
+let currentSession = initialSession || '';
+let ws = null;
+let connected = false;
+
+function setSession(id) {
+  currentSession = id;
+  sessionInput.value = id;
+  sessionIdSpan.textContent = id;
+  if (id) {
+    sessionInput.classList.add('hidden');
+    joinBtn.classList.add('hidden');
+    sessionDisplay.classList.remove('hidden');
+    connect();
+  } else {
+    sessionInput.classList.remove('hidden');
+    joinBtn.classList.remove('hidden');
+    sessionDisplay.classList.add('hidden');
+    disconnect();
+  }
+}
+
+function connect() {
+  if (!currentSession) return;
+  disconnect();
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${protocol}//${window.location.host}/signaling?session=${encodeURIComponent(currentSession)}`);
+
+  ws.onopen = () => {
+    connected = true;
+    $('statusDot').classList.add('is-live');
+    $('st').textContent = 'Connected to reader';
+    $('remoteBadge').textContent = 'Connected';
+    $('remoteBadge').classList.add('is-live');
   };
-  if(cmd==='toggle')playBtn=b;
+  ws.onmessage = (e) => {
+    let m;
+    try { m = JSON.parse(e.data); } catch { return; }
+    if (m.role !== 'reader') return;
+    const s = m.state;
+    $('st').textContent = (s.playing ? 'Playing' : 'Paused') + ' · ' + s.speed + ' wpm';
+    $('remotePct').textContent = s.progress + '%';
+    $('remoteProgressFill').style.width = s.progress + '%';
+    $('statusDot').classList.add('is-live');
+    $('remoteBadge').textContent = s.playing ? 'Live' : 'Paused';
+    $('remoteBadge').classList.toggle('is-live', s.playing);
+    setPlaying(s.playing);
+  };
+  ws.onclose = () => {
+    connected = false;
+    ws = null;
+    $('statusDot').classList.remove('is-live');
+    $('st').textContent = 'Disconnected';
+    $('remoteBadge').textContent = 'Disconnected';
+    $('remoteBadge').classList.remove('is-live');
+  };
+  ws.onerror = () => {
+    $('st').textContent = 'Connection error';
+  };
+}
+
+function disconnect() {
+  if (ws) { ws.close(); ws = null; }
+  connected = false;
+}
+
+joinBtn.onclick = () => {
+  const id = sessionInput.value.trim();
+  if (!id) return;
+  setSession(id);
+};
+
+$('remoteCopySession').onclick = () => {
+  navigator.clipboard.writeText(currentSession || '');
+};
+
+// Build command buttons
+let playBtn;
+COMMANDS.forEach(([cmd, label, icon, wide]) => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'remote-btn' + (wide ? ' remote-btn-wide remote-btn-primary' : '');
+  b.dataset.cmd = cmd;
+  b.innerHTML = `<span class="remote-btn-icon">${ICONS[icon]}</span><span class="remote-btn-label">${label}</span>`;
+  b.onclick = () => sendCmd(cmd);
+  if (cmd === 'toggle') playBtn = b;
   $('btns').append(b);
 });
 
-function setPlaying(playing){
-  if(!playBtn)return;
-  playBtn.querySelector('.remote-btn-label').textContent=playing?'Pause':'Play / Pause';
-  playBtn.querySelector('.remote-btn-icon').innerHTML=playing?ICONS.pause:ICONS.play;
+function sendCmd(cmd) {
+  if (!ws || ws.readyState !== 1 || !currentSession) return;
+  ws.send(JSON.stringify({ role: 'controller', session: currentSession, cmd }));
+  const b = document.querySelector(`[data-cmd="${cmd}"]`);
+  if (b) {
+    b.classList.add('is-pressed');
+    setTimeout(() => b.classList.remove('is-pressed'), 150);
+  }
 }
 
-ch.onmessage=e=>{
-  if(!e.data.state)return;
-  const s=e.data.state;
-  $('st').textContent=(s.playing?'Playing':'Paused')+' · '+s.speed+' wpm';
-  $('remotePct').textContent=s.progress+'%';
-  $('remoteProgressFill').style.width=s.progress+'%';
-  $('statusDot').classList.add('is-live');
-  $('remoteBadge').textContent=s.playing?'Live':'Paused';
-  $('remoteBadge').classList.toggle('is-live',s.playing);
-  setPlaying(s.playing);
-};
-ch.postMessage({cmd:'hello'});
+function setPlaying(playing) {
+  if (!playBtn) return;
+  playBtn.querySelector('.remote-btn-label').textContent = playing ? 'Pause' : 'Play / Pause';
+  playBtn.querySelector('.remote-btn-icon').innerHTML = playing ? ICONS.pause : ICONS.play;
+}
+
+if (initialSession) {
+  setSession(initialSession);
+} else {
+  sessionInput.classList.remove('hidden');
+  joinBtn.classList.remove('hidden');
+  sessionDisplay.classList.add('hidden');
+}
+
+window.addEventListener('beforeunload', () => { if (ws) ws.close(); });
 </script>
 </body>
 </html>
