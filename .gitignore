@@ -21,3 +21,4 @@ npm-debug.log*
 # Browser / local dev
 vendor/
 *.png
+*.zip
