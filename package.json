@@ -1,14 +1,14 @@
 {
   "name": "teleprompter-studio",
   "version": "1.0.0",
-  "description": "Local-first teleprompter. HTML + vanilla JS (ES modules) + hand-crafted CSS + IndexedDB. No backend; data never leaves the browser.",
-  "homepage": "https://github.com/your-username/teleprompter-studio",
+  "description": "Teleprompter Studio — a free, local-first teleprompter for content creators, YouTube, and TikTok. Hosted freely at www.teleprompter.qubeteck.com. Built with vanilla JS (ES modules) + hand-crafted CSS + IndexedDB. No backend; data never leaves the browser.",
+  "homepage": "https://github.com/bulchaa/teleprompter-studio",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/teleprompter-studio.git"
+    "url": "https://github.com/bulchaa/teleprompter-studio.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/teleprompter-studio/issues"
+    "url": "https://github.com/bulchaa/teleprompter-studio/issues"
   },
   "main": "index.js",
   "scripts": {
@@ -18,14 +18,18 @@
   },
   "keywords": [
     "teleprompter",
+    "content-creation",
+    "youtube",
+    "tiktok",
     "local-first",
     "indexeddb",
     "vanilla-js",
     "es-modules",
     "responsive",
-    "dark-mode"
+    "dark-mode",
+    "free"
   ],
-  "author": "",
+  "author": "bulchaa",
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {

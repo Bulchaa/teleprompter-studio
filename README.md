@@ -1,8 +1,12 @@
-# Teleprompter Studio
+# Teleprompter Studio — v1
 
-A modern, local-first teleprompter built with vanilla JavaScript (ES modules) and hand-crafted CSS.
-No backend, no accounts — your scripts never leave your browser. Works on desktop, tablet, and phone,
-with a built-in day/night theme toggle and an optional phone remote.
+A free, modern, local-first teleprompter built for **content creators, YouTube, and TikTok**.
+Built with vanilla JavaScript (ES modules) and hand-crafted CSS. No backend, no accounts — your scripts
+never leave your browser. Works on desktop, tablet, and phone, with a built-in day/night theme toggle
+and an optional phone remote.
+
+🌐 **Hosted free for everyone:** [www.teleprompter.qubeteck.com](https://www.teleprompter.qubeteck.com)
+
 
 ## Features
 
